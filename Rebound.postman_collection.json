@@ -1,0 +1,227 @@
+{
+	"info": {
+		"_postman_id": "fbeb1d41-deaa-49dc-8935-1999f28dad5c",
+		"name": "Rebound",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25805063"
+	},
+	"item": [
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Teste\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4242/create",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4242",
+					"path": [
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add primary body",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"m\": 1.7857e29,\r\n    \"hash\": \"TRAPPIST-1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4242/add_primary",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4242",
+					"path": [
+						"add_primary"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Load",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Teste\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4242/load",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4242",
+					"path": [
+						"load"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add object",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"m\": 10e3,\r\n    \"hash\": \"Free\",\r\n    \"x\": 1e8,\r\n    \"y\": 1e6,\r\n    \"z\": 1e3,\r\n    \"vx\": 1e3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4242/add_object",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4242",
+					"path": [
+						"add_object"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add from orbital elements",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"m\": 8.2055E+24,\r\n    \"P\": 130535.37,\r\n    \"e\": 0.00622,\r\n    \"inc\": 0.056,\r\n    \"M\": 3.25,\r\n    \"hash\": \"Planet-B\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4242/add_from_orbital_elements",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4242",
+					"path": [
+						"add_from_orbital_elements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get trajectory",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"end_time\": 31536000,\r\n    \"time_step\": 86400\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4242/get_trajectory",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4242",
+					"path": [
+						"get_trajectory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Integrate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"time\": 86400\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4242/integrate",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4242",
+					"path": [
+						"integrate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
