@@ -34,7 +34,7 @@ def create_route():
     else:
         sim = Simulation(data['name'])
         sim.save()
-        result = {'status': 'success'}
+        result = {'status': 'success', 'message': f'Simulation {data['name']} created'}
     return jsonify(result)
 
 
@@ -56,7 +56,7 @@ def load_route():
     else:
         try:
             sim = Simulation.load(data['name'])
-            result = {'status': 'success'}
+            result = {'status': 'success', 'message': f'Simulation {data['name']} loaded'}
         except Exception as e:
             result = {'status': 'error', 'message': str(e)}
     return jsonify(result)
@@ -85,7 +85,7 @@ def add_primary_route():
         try:
             sim.add_primary(**data)
             sim.save()
-            result = {'status': 'success'}
+            result = {'status': 'success', 'message': f'{data['hash']} added'}
         except Exception as e:
             result = {'status': 'error', 'message': str(e)}
     return jsonify(result)
@@ -114,7 +114,7 @@ def add_object_route():
         try:
             sim.add_object(**data)
             sim.save()
-            result = {'status': 'success'}
+            result = {'status': 'success', 'message': f'{data['hash']} added'}
         except Exception as e:
             result = {'status': 'error', 'message': str(e)}
     return jsonify(result)
@@ -143,7 +143,7 @@ def add_from_orbital_elements_route():
         try:
             sim.add_from_orbital_elements(**data)
             sim.save()
-            result = {'status': 'success'}
+            result = {'status': 'success', 'message': f'{data['hash']} added'}
         except Exception as e:
             result = {'status': 'error', 'message': str(e)}
     return jsonify(result)
@@ -168,8 +168,36 @@ def integrate_route():
         result = {'status': 'error', 'message': 'Please create a simulation first'}
     else:
         try:
-            result = sim.integrate(data['time'])
+            sim.integrate(data['time'])
             sim.save()
+            result = {'status': 'success', 'message': f'Simulation {sim.name} integrated to {data['time']}'}
+        except Exception as e:
+            result = {'status': 'error', 'message': str(e)}
+    return jsonify(result)
+
+
+@app.route('/update_object', methods=['POST'])
+def update_object_route():
+    """
+    Update the properties of an object in the simulation.
+
+    Returns:
+        jsonify: A JSON response indicating success or error with a message.
+    """
+    global sim
+    data = request.json
+    result = {}
+    if (data is None) or ('hash' not in data):
+        result = {'status': 'error', 'message': 'Please provide hash'}
+    elif not isinstance(data['hash'], str):
+        result = {'status': 'error', 'message': 'Hash should be a string'}
+    elif sim.name == '':
+        result = {'status': 'error', 'message': 'Please create a simulation first'}
+    else:
+        try:
+            sim.update_object(**data)
+            sim.save()
+            result = {'status': 'success', 'message': f'{data['hash']} updated'}
         except Exception as e:
             result = {'status': 'error', 'message': str(e)}
     return jsonify(result)

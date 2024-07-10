@@ -133,6 +133,18 @@ class Simulation:
         self._sim.add(particle)
         self._particles[particle.hash.value] = hash
 
+    def update_object(self, hash: str, **kwargs: Any) -> None:
+        """
+        Update the properties of an object in the simulation.
+
+        Args:
+            hash (str): The hash identifier for the object.
+            **kwargs: Additional keyword arguments for particle properties.
+        """
+        particle = self._sim.particles[hash]
+        for key, value in kwargs.items():
+            setattr(particle, key, value)
+
     def integrate(self, time: float) -> Dict[str, Any]:
         """
         Integrate the simulation to a specified time.
