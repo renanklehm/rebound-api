@@ -214,26 +214,27 @@ class Simulation:
             Dict[str, Any]: A dictionary containing the trajectories of particles over the specified time period.
         """
         trajectory_sim = self.copy()
-        result = {}
+        results = []
 
         for current_time in np.arange(trajectory_sim.time, end_time, time_step):
             trajectory_sim.integrate(current_time)
+            time_result = {'time': trajectory_sim.time, 'particles': []}
 
             if target:
                 target_particle = trajectory_sim.particles[target]
-                if target not in result:
-                    result[target] = {}
-                result[target][trajectory_sim.time] = {
+                time_result['particles'].append({
+                    'name': target,
                     'position': target_particle.xyz,
                     'velocity': target_particle.vxyz
-                }
+                })
             else:
                 for particle in trajectory_sim.particles:
                     name = trajectory_sim._particles[particle.hash.value]
-                    if name not in result:
-                        result[name] = {}
-                    result[name][trajectory_sim.time] = {
+                    time_result['particles'].append({
+                        'name': name,
                         'position': particle.xyz,
                         'velocity': particle.vxyz
-                    }
-        return result
+                    })
+            results.append(time_result)
+
+        return results
