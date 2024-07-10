@@ -20,9 +20,6 @@ class Simulation:
         self._particles = {}
         self._primary = None
 
-        if self.path:
-            self.save()
-
     @property
     def time(self) -> float:
         return self._sim.t

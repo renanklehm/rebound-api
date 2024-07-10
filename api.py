@@ -21,6 +21,7 @@ def create_route():
         result = {'status': 'error', 'message': 'Please provide a non-null name'}
     else:
         sim = Simulation(data['name'])
+        sim.save()
         result = {'status': 'success'}
     return jsonify(result)
 
