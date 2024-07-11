@@ -90,9 +90,9 @@ class Simulation:
         Raises:
             ValueError: If a primary particle already exists.
         """
+
         if self._sim.particles:
             raise ValueError('Primary already exists')
-
         primary_particle = rebound.Particle(m=m)
         primary_particle.hash = hash
         self._sim.add(primary_particle)
@@ -107,7 +107,12 @@ class Simulation:
             m (float): The mass of the object.
             hash (str): The hash identifier for the object.
             **kwargs: Additional keyword arguments for particle properties.
+
+        Raises:
+            ValueError: If the object hash already exists in the simulation.
         """
+
+        self._check_duplicate(hash)
         particle = rebound.Particle(m=m, **kwargs)
         particle.hash = hash
         self._sim.add(particle)
@@ -124,10 +129,10 @@ class Simulation:
 
         Raises:
             ValueError: If the primary particle is not set.
+            ValueError: If the object hash already exists in the simulation.
         """
-        if self._primary is None:
-            raise ValueError("Primary particle must be set before adding particles with orbital elements")
 
+        self._check_duplicate(hash)
         particle = rebound.Particle(simulation=self._sim, primary=self._primary, m=m, **kwargs)
         particle.hash = hash
         self._sim.add(particle)
@@ -214,26 +219,44 @@ class Simulation:
             Dict[str, Any]: A dictionary containing the trajectories of particles over the specified time period.
         """
         trajectory_sim = self.copy()
-        result = {}
+        results = []
 
         for current_time in np.arange(trajectory_sim.time, end_time, time_step):
             trajectory_sim.integrate(current_time)
+            time_result = {'time': trajectory_sim.time, 'particles': []}
 
             if target:
                 target_particle = trajectory_sim.particles[target]
-                if target not in result:
-                    result[target] = {}
-                result[target][trajectory_sim.time] = {
+                time_result['particles'].append({
+                    'name': target,
                     'position': target_particle.xyz,
                     'velocity': target_particle.vxyz
-                }
+                })
             else:
                 for particle in trajectory_sim.particles:
                     name = trajectory_sim._particles[particle.hash.value]
-                    if name not in result:
-                        result[name] = {}
-                    result[name][trajectory_sim.time] = {
+                    time_result['particles'].append({
+                        'name': name,
                         'position': particle.xyz,
                         'velocity': particle.vxyz
-                    }
-        return result
+                    })
+            results.append(time_result)
+
+        return results
+
+    def _check_duplicate(self, hash: str):
+        """
+        Check if a particle with the given hash already exists.
+
+        Parameters:
+            hash (str): The hash of the particle to check.
+
+        Raises:
+            ValueError: If the primary particle already exists or if an object with the given hash already exists.
+        """
+
+        if len(self._particles) == 0:
+            raise ValueError('Before adding objects, please add the primary particle first.')
+
+        if hash in self._particles:
+            raise ValueError(f'Object with hash {hash} already exists. Please use a unique hash or the update method if you wish to update the particle.')
