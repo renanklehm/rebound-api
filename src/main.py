@@ -148,7 +148,8 @@ class Simulation:
         """
         particle = self._sim.particles[hash]
         for key, value in kwargs.items():
-            setattr(particle, key, value)
+            if value is not None:
+                setattr(particle, key, value)
 
     def integrate(self, time: float) -> Dict[str, Any]:
         """
@@ -206,11 +207,12 @@ class Simulation:
                 }
         return result
 
-    def get_trajectory(self, end_time: float, time_step: float, target: Optional[str] = None) -> Dict[str, Any]:
+    def get_trajectory(self, start_time: float, end_time: float, time_step: float, target: Optional[str] = None) -> Dict[str, Any]:
         """
         Get the trajectory of particles over a time period.
 
         Args:
+            start_time (float): The start time of the trajectory.
             end_time (float): The end time of the trajectory.
             time_step (float): The time step between points in the trajectory.
             target (Optional[str]): The hash of the target particle to get the trajectory for. If None, all particles are included.
@@ -219,30 +221,30 @@ class Simulation:
             Dict[str, Any]: A dictionary containing the trajectories of particles over the specified time period.
         """
         trajectory_sim = self.copy()
-        results = []
+        trajectory_sim.integrate(start_time)
+        result = {}
 
         for current_time in np.arange(trajectory_sim.time, end_time, time_step):
             trajectory_sim.integrate(current_time)
-            time_result = {'time': trajectory_sim.time, 'particles': []}
 
             if target:
                 target_particle = trajectory_sim.particles[target]
-                time_result['particles'].append({
-                    'name': target,
+                if target not in result:
+                    result[target] = {}
+                result[target][trajectory_sim.time] = {
                     'position': target_particle.xyz,
                     'velocity': target_particle.vxyz
-                })
+                }
             else:
                 for particle in trajectory_sim.particles:
                     name = trajectory_sim._particles[particle.hash.value]
-                    time_result['particles'].append({
-                        'name': name,
+                    if name not in result:
+                        result[name] = {}
+                    result[name][trajectory_sim.time] = {
                         'position': particle.xyz,
                         'velocity': particle.vxyz
-                    })
-            results.append(time_result)
-
-        return results
+                    }
+        return result
 
     def _check_duplicate(self, hash: str):
         """

@@ -39,13 +39,26 @@ class BodyData(BaseModel):
     vz: Optional[float] = None
 
 
+class BodyUpdateData(BaseModel):
+    hash: str
+    m: Optional[float] = None
+    x: Optional[float] = None
+    y: Optional[float] = None
+    z: Optional[float] = None
+    vx: Optional[float] = None
+    vy: Optional[float] = None
+    vz: Optional[float] = None
+
+
 class TimeData(BaseModel):
     time: float
 
 
 class TrajectoryData(BaseModel):
+    start_time: float
     end_time: float
     time_step: float
+    target: Optional[str] = None
 
 
 @app.route('/')
@@ -122,7 +135,7 @@ def integrate_route(data: TimeData):
 
 
 @app.post('/update_object')
-def update_object_route(data: BodyData):
+def update_object_route(data: BodyUpdateData):
     global sim
     try:
         sim.update_object(**data.model_dump())
